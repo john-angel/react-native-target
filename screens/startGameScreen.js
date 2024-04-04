@@ -1,7 +1,27 @@
-import { StyleSheet, TextInput, View } from "react-native";
+import { useState } from "react";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
 import PrimaryButton from "../components/primaryButton";
 
-export default function StartGameScreen(){
+export default function StartGameScreen({ onPickedNumber }){
+    const[enteredNumber, setEnteredNumber] = useState('');
+
+    const numberInputHandler = (enteredText) => setEnteredNumber(enteredText);
+    
+    const resetInputHandler = () => setEnteredNumber('')
+
+    const confirmInputHandler = () => {
+        const chosenNumber = parseInt(enteredNumber);
+        if(isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99){
+            Alert.alert(
+                'Invalid number',
+                'Number has to be between 1 and 99',
+                [{ text: 'OK', style: 'destructive', onPress: resetInputHandler}]
+                )
+            return;
+        }
+        onPickedNumber(chosenNumber);
+    }
+
     return (
         <View style={ styles.inputContainer }>
             <TextInput 
@@ -9,20 +29,31 @@ export default function StartGameScreen(){
                 maxLength={ 2 }
                 keyboardType="number-pad"
                 autoCapitalize="none"
+                value={ enteredNumber }
+                onChangeText={ numberInputHandler }
             />
-            <PrimaryButton>Reset</PrimaryButton>
-            <PrimaryButton>Confirm</PrimaryButton>
+            <View style={ styles.ctaContainer }>
+                <View style={ styles.buttonContainer }>
+                    <PrimaryButton onPress={ confirmInputHandler }>Confirm</PrimaryButton>
+                </View>
+                <View style={ styles.buttonContainer }>
+                    <PrimaryButton onPress={ resetInputHandler }>Reset</PrimaryButton>
+                </View>
+            </View>            
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {        
+    inputContainer: {    
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 16,
         marginTop: 100,
         marginHorizontal: 24,
         borderRadius: 8,
-        backgroundColor: '#4E0329',
+        backgroundColor: '#3B021F',
         elevation: 4,
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 2},
@@ -39,5 +70,13 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         fontWeight: 'bold',
         textAlign: 'center'
+    },
+    ctaContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    buttonContainer: {
+        flex: 1
     }
+
 })
