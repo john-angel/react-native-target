@@ -26,7 +26,7 @@ export default function GameScreen({ userNumber }){
             (direction === 'lower' && currentGuess < userNumber) ||
             (direction === 'greater' && currentGuess > userNumber)
         ) {
-            Alert.alert('Wrong!', 'You are lying :-(', { text: 'Sorry', style: 'cancel' });
+            Alert.alert('Wrong action', 'You\'re lying :-(', { text: 'Sorry', style: 'cancel' });
             return;
         }
 
