@@ -1,8 +1,11 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
 import { useEffect, useState } from "react";
+import { Ionicons } from '@expo/vector-icons';
 import PrimaryButton from "../components/ui/primaryButton";
 import Title from "../components/ui/title";
 import NumberContainer from "../components/game/numberContainer";
+import Card from "../components/ui/card";
+import InstructionText from "../components/ui/instructionText";
 
 function generateRandomBetween(min, max, exclude){
     const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -49,13 +52,17 @@ export default function GameScreen({ userNumber, onGameOver }){
         <View style={ styles.screen }>
             <Title>Opponnent's guess</Title>
             <NumberContainer>{ currentGuess }</NumberContainer>
-            <View>
-                <Text>Higher or lower?</Text>
-                <View>
-                    <PrimaryButton onPress={  nextGuessHandler.bind(this, 'greater') }>+</PrimaryButton>
-                    <PrimaryButton onPress={ nextGuessHandler.bind(this, 'lower') }>-</PrimaryButton>
+            <Card>
+                <InstructionText style={ styles.instructionText }>Higher or lower?</InstructionText>                
+                <View style={ styles.ctaContainer }>
+                    <PrimaryButton onPress={ nextGuessHandler.bind(this, 'greater') }>
+                        <Ionicons name='add' size={ 24 } color='white'/>
+                    </PrimaryButton>
+                    <PrimaryButton onPress={ nextGuessHandler.bind(this, 'lower') }>
+                        <Ionicons name='remove' size={ 24 } color='white'/>
+                    </PrimaryButton>
                 </View>                
-            </View>
+            </Card>
             <View><Text>LOG Rounds</Text></View>
         </View>
     ) 
@@ -65,5 +72,11 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         padding: 24
+    },
+    instructionText: {
+        marginBottom: 12
+    },
+    ctaContainer: {
+        flexDirection: 'row'
     }
 })

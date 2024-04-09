@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
     numberText: {
+        fontFamily: 'open-sans-regular',
         color: COLORS.accent500,
-        fontSize: 36,
-        fontWeight: 'bold'        
+        fontSize: 36        
     }
 })

@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import openSansBoldFont from './assets/fonts/OpenSans-Bold.ttf';
+import openSansRegularFont from './assets/fonts/OpenSans-Regular.ttf';
+
 import background from './assets/images/background.jpg';
 import StartGameScreen from './screens/startGameScreen';
 import GameScreen from './screens/gameScreen';
 import COLORS from './constants/colors';
 import GameOver from './screens/gameOver';
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
+  
+  const [fontsLoaded] = useFonts({
+    'open-sans-regular': openSansRegularFont,
+    'open-sans-bold': openSansBoldFont
+  });
+ 
+
+  const onLayoutRootView = useCallback(async () => {
+    if(fontsLoaded){
+      await SplashScreen.hideAsync();
+    }
+  },[fontsLoaded])
+
   const[userNumber, setUserNumber] = useState(undefined);
   const[gameIsOver, setGameIsOver] = useState(false);
 
@@ -25,6 +45,10 @@ export default function App() {
     screen = <GameOver/>
   }
 
+  if(!fontsLoaded){
+    return null;
+  }
+
   return (
     <LinearGradient colors={ [COLORS.primary700,COLORS.accent500] } style={ styles.rootScreen }>
       <ImageBackground 
@@ -33,8 +57,11 @@ export default function App() {
         style={ styles.rootScreen }
         imageStyle={ styles.backgroundImage }
       >
-        <SafeAreaView style={ styles.rootScreen }>
-        { screen }
+        <SafeAreaView 
+          style={ styles.rootScreen }
+          onLayout={ onLayoutRootView }
+        >
+          { screen }
         </SafeAreaView>        
       </ImageBackground>
     </LinearGradient>
