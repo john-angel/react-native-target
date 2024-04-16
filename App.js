@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
@@ -30,10 +30,20 @@ export default function App() {
 
   const[userNumber, setUserNumber] = useState(undefined);
   const[gameIsOver, setGameIsOver] = useState(false);
+  const roundsRef = useRef(0);
 
   const pickedNumberHandler = (pickedNumber) => setUserNumber(pickedNumber)
 
-  const gameOverHandler = () => setGameIsOver(true)
+  const gameOverHandler = (rounds) => {
+    setGameIsOver(true);
+    roundsRef.current = rounds;
+  }
+
+  const newGameHandler = () => {
+    setUserNumber(undefined);
+    setGameIsOver(false);
+    roundsRef.current = 0;
+  }
 
   let screen = <StartGameScreen onPickedNumber={ pickedNumberHandler }/>
 
@@ -42,7 +52,7 @@ export default function App() {
   }
 
   if(gameIsOver){
-    screen = <GameOver/>
+    screen = <GameOver rounds={ roundsRef.current } userNumber={ userNumber } onStartNewGame={ newGameHandler }/>
   }
 
   if(!fontsLoaded){
